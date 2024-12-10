@@ -123,13 +123,3 @@ def load_saved_game(self):
         self.board.empty_pos = tuple(saved_state['empty_pos'])
         return True
     return False
-
-def load_saved_game(self):
-    saved_state = self.game_state.load_game()
-    if saved_state:
-        self.board.size = saved_state['size']
-        self.board.board = saved_state['board']
-        self.moves = saved_state['moves']
-        self.board.empty_pos = tuple(saved_state['empty_pos'])
-        return True
-    return False
