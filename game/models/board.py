@@ -1,4 +1,3 @@
-class Board:
 """
     Represents a game board of a given size.
     
@@ -18,7 +17,8 @@ class Board:
             Checks if the given row and column indices are within the bounds of the board.
         get_board_state() -> list[list[int]]:
             Returns a copy of the current state of the board.
-    """
+"""
+class Board:
         def __init__(self, size):
         self.size = size
         self.board = [[0] * size for _ in range(size)]
