@@ -19,7 +19,7 @@
             Returns a copy of the current state of the board.
 """
 class Board:
-        def __init__(self, size):
+    def __init__(self, size):
         self.size = size
         self.board = [[0] * size for _ in range(size)]
         self.empty_pos = (size-1, size-1)
