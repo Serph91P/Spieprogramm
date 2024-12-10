@@ -13,9 +13,10 @@ The class has the following methods:
 - `save_game(self)`: Saves the current game state.
 """
 import random
+import json
+import os
 from models.board import Board
 from models.game_state import GameState
-
 class SlidingPuzzle:
     def __init__(self, size=3):
         self.board = Board(size)
