@@ -1,43 +1,55 @@
 """
-The `SlidingPuzzle` class represents a sliding puzzle game. It provides methods to initialize the game board, display the current state, make valid moves, and check if the puzzle is solved.
+Das Modul `sliding_puzzle.py` definiert die Kernlogik des Sliding-Puzzle-Spiels.
 
-The class has the following methods:
+Klasse:
+- SlidingPuzzle: Beinhaltet die Spiellogik und Interaktion mit der Spielfeld- und Spielzustandsverwaltung.
 
-- `__init__(self, size=3)`: Initializes a new `SlidingPuzzle` instance with the given board size (default is 3).
-- `initialize_random(self)`: Initializes the game board with a random arrangement of numbers.
-- `initialize_manual(self)`: Allows the user to manually enter the initial arrangement of numbers on the game board.
-- `display_board(self)`: Prints the current state of the game board and the number of moves made.
-- `is_valid_move(self, number)`: Checks if a given number can be moved to the empty space on the board.
-- `make_move(self, number)`: Moves the given number to the empty space on the board, if the move is valid.
-- `is_solved(self)`: Checks if the puzzle is in the solved state.
-- `save_game(self)`: Saves the current game state.
+Funktionen:
+- __init__(self, size=3): Initialisiert das Puzzle mit einer Standardgröße von 3x3.
+- initialize_random(self): Erstellt ein zufälliges Puzzle.
+- initialize_manual(self): Ermöglicht die manuelle Eingabe eines Puzzle-Layouts.
+- display_board(self): Zeigt den aktuellen Zustand des Puzzles an.
+- is_valid_move(self, number): Überprüft, ob ein Zug gültig ist.
+- make_move(self, number): Führt einen gültigen Zug aus.
+- is_solved(self): Prüft, ob das Puzzle gelöst ist.
+- save_game(self): Speichert den aktuellen Spielzustand.
 """
+
 import random
 import json
 import os
 from models.board import Board
 from models.game_state import GameState
+
 class SlidingPuzzle:
     def __init__(self, size=3):
+        """
+        Initialisiert ein Sliding Puzzle.
+
+        Argumente:
+        - size (int): Die Größe des Spielfelds (z. B. 3 für ein 3x3-Feld).
+        """
         self.board = Board(size)
         self.game_state = GameState()
         self.moves = 0
 
     def initialize_random(self):
+        """Erstellt ein zufälliges Layout für das Puzzle."""
         numbers = list(range(1, self.board.size * self.board.size))
         random.shuffle(numbers)
-        numbers.append(0)
-        
+        numbers.append(0)  # Das leere Feld
+
         for i in range(self.board.size):
             for j in range(self.board.size):
                 self.board.set_value(i, j, numbers[i * self.board.size + j])
         self._update_empty_pos()
 
     def initialize_manual(self):
+        """Ermöglicht die manuelle Eingabe eines Puzzle-Layouts."""
         numbers = list(range(1, self.board.size * self.board.size)) + [0]
         used_numbers = set()
 
-        print("\nEnter numbers (1 to {}) for each position (0 for empty space):".format(
+        print("\nGeben Sie Zahlen (1 bis {}) für jede Position ein (0 für leeres Feld):".format(
             self.board.size * self.board.size - 1))
         
         for i in range(self.board.size):
@@ -52,21 +64,23 @@ class SlidingPuzzle:
                                 self.board.empty_pos = (i, j)
                             break
                         else:
-                            print("Invalid number or already used!")
+                            print("Ungültige Zahl oder bereits verwendet!")
                     except ValueError:
-                        print("Please enter a valid number!")
+                        print("Bitte geben Sie eine gültige Zahl ein!")
 
     def display_board(self):
-        print("\nCurrent board:")
+        """Zeigt das aktuelle Spielfeld an."""
+        print("\nAktuelles Spielfeld:")
         for i in range(self.board.size):
             row = []
             for j in range(self.board.size):
                 value = self.board.get_value(i, j)
                 row.append(str(value) if value != 0 else " ")
             print(" ".join(row))
-        print(f"Moves: {self.moves}")
+        print(f"Züge: {self.moves}")
 
     def is_valid_move(self, number):
+        """Überprüft, ob eine Zahl in das leere Feld verschoben werden kann."""
         for i in range(self.board.size):
             for j in range(self.board.size):
                 if self.board.get_value(i, j) == number:
@@ -74,10 +88,11 @@ class SlidingPuzzle:
         return False
 
     def _is_adjacent(self, row1, col1, pos2):
-        return (abs(row1 - pos2[0]) == 1 and col1 == pos2[1]) or \
-               (abs(col1 - pos2[1]) == 1 and row1 == pos2[0])
+        """Prüft, ob zwei Felder benachbart sind."""
+        return (abs(row1 - pos2[0]) == 1 and col1 == pos2[1]) or                (abs(col1 - pos2[1]) == 1 and row1 == pos2[0])
 
     def make_move(self, number):
+        """Führt einen Zug aus, wenn er gültig ist."""
         if not self.is_valid_move(number):
             return False
 
@@ -93,6 +108,7 @@ class SlidingPuzzle:
         return False
 
     def is_solved(self):
+        """Prüft, ob das Puzzle gelöst ist."""
         count = 1
         for i in range(self.board.size):
             for j in range(self.board.size):
@@ -104,6 +120,7 @@ class SlidingPuzzle:
         return True
 
     def _update_empty_pos(self):
+        """Aktualisiert die Position des leeren Feldes."""
         for i in range(self.board.size):
             for j in range(self.board.size):
                 if self.board.get_value(i, j) == 0:
@@ -111,10 +128,12 @@ class SlidingPuzzle:
                     return
 
     def save_game(self):
+        """Speichert den aktuellen Spielzustand."""
         self.game_state.save_game(self.board, self.moves)
-        print("Game saved!")
+        print("Spiel gespeichert!")
 
     def load_saved_game(self):
+        """Lädt einen gespeicherten Spielzustand."""
         saved_state = self.game_state.load_game()
         if saved_state:
             self.board.size = saved_state['size']
