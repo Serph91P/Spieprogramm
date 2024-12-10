@@ -16,6 +16,7 @@ Methods:
             moves (int): The number of moves made in the current game.
 """
 import json
+import os
 
 class GameState:
     def __init__(self):
@@ -31,3 +32,9 @@ class GameState:
         }
         with open(self.save_file, 'w') as f:
             json.dump(game_state, f)
+
+    def load_game(self):
+        if os.path.exists(self.save_file):
+            with open(self.save_file, 'r') as f:
+                return json.load(f)
+        return None
