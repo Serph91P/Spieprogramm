@@ -9,24 +9,37 @@ def main():
     while True:
         print("\nWelcome to the Sliding Puzzle Game!")
         
-        # Get board size
-        while True:
-            try:
-                size = int(input("Enter board size (minimum 2): "))
-                if size >= 2:
-                    break
-                print("Size must be at least 2!")
-            except ValueError:
-                print("Please enter a valid number!")
+        # Add load game option
+        choice = input("Do you want to:\n1. Start new game\n2. Load saved game\n3. Quit\nChoice: ")
         
-        game = SlidingPuzzle(size)
-        
-        # Choose initialization method
-        init_choice = input("Choose initialization method:\n1. Random\n2. Manual\nChoice: ")
-        if init_choice == '1':
-            game.initialize_random()
+        if choice == '3':
+            break
+            
+        if choice == '2':
+            game = SlidingPuzzle()
+            if game.load_saved_game():
+                print("Game loaded successfully!")
+            else:
+                print("No saved game found!")
+                continue
         else:
-            game.initialize_manual()
+            # Existing new game code
+            while True:
+                try:
+                    size = int(input("Enter board size (minimum 2): "))
+                    if size >= 2:
+                        break
+                    print("Size must be at least 2!")
+                except ValueError:
+                    print("Please enter a valid number!")
+            
+            game = SlidingPuzzle(size)
+            
+            init_choice = input("Choose initialization method:\n1. Random\n2. Manual\nChoice: ")
+            if init_choice == '1':
+                game.initialize_random()
+            else:
+                game.initialize_manual()
 
         def handle_save_game(game):
             game.save_game()
@@ -66,6 +79,5 @@ def main():
             break
 
     print("Thanks for playing!")
-
 if __name__ == "__main__":
     main()
