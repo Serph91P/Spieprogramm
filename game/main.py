@@ -28,6 +28,16 @@ def main():
         else:
             game.initialize_manual()
 
+        def handle_save_game(game):
+            game.save_game()
+            while True:
+                choice = input("Do you want to (q)uit or (c)ontinue playing? ").lower()
+                if choice == 'q':
+                    return False  # Exit game loop
+                elif choice == 'c':
+                    return True  # Continue game
+                print("Please enter 'q' to quit or 'c' to continue")
+
         # Main game loop
         while not game.is_solved():
             game.display_board()
@@ -35,7 +45,8 @@ def main():
             action = input("\nEnter number to move or 's' to save game: ")
             
             if action.lower() == 's':
-                game.save_game()
+                if not handle_save_game(game):
+                    break  # Exit to main menu
                 continue
                 
             try:
