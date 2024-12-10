@@ -1,85 +1,90 @@
 """
-The main entry point for the Sliding Puzzle game.
+Das Hauptmodul des Sliding-Puzzle-Spiels.
+- Hier wird der Einstiegspunkt des Spiels definiert.
+- Beinhaltet das Menü, die Benutzerinteraktion und die Spielschleife.
 
-This module initializes the game, handles user input, and manages the game loop until the puzzle is solved.
+Funktionen:
+- main(): Führt das Spiel aus, bietet Optionen zum Starten, Laden oder Beenden.
 """
+
 from sliding_puzzle import SlidingPuzzle
 
 def main():
     while True:
-        print("\nWelcome to the Sliding Puzzle Game!")
-        
-        # Add load game option
-        choice = input("Do you want to:\n1. Start new game\n2. Load saved game\n3. Quit\nChoice: ")
-        
+        print("\nWillkommen zum Sliding Puzzle!")
+
+        # Hauptmenü mit Optionen
+        choice = input("Was möchten Sie tun?\n1. Neues Spiel starten\n2. Spiel laden\n3. Beenden\nEingabe: ")
+
         if choice == '3':
             break
-            
+
         if choice == '2':
             game = SlidingPuzzle()
             if game.load_saved_game():
-                print("Game loaded successfully!")
+                print("Spiel erfolgreich geladen!")
             else:
-                print("No saved game found!")
+                print("Kein gespeichertes Spiel gefunden!")
                 continue
         else:
-            # Get board size
+            # Abfrage der Spielfeldgröße
             while True:
                 try:
-                    size = int(input("Enter board size (minimum 2): "))
+                    size = int(input("Geben Sie die Spielfeldgröße ein (min. 2): "))
                     if size >= 2:
                         break
-                    print("Size must be at least 2!")
+                    print("Die Größe muss mindestens 2 sein!")
                 except ValueError:
-                    print("Please enter a valid number!")
-            
+                    print("Bitte geben Sie eine gültige Zahl ein!")
+
             game = SlidingPuzzle(size)
-            
-            # Choose initialization method
-            init_choice = input("Choose initialization method:\n1. Random\n2. Manual\nChoice: ")
+
+            # Auswahl der Initialisierungsmethode
+            init_choice = input("Wählen Sie die Initialisierungsmethode:\n1. Zufällig\n2. Manuell\nEingabe: ")
             if init_choice == '1':
                 game.initialize_random()
             else:
                 game.initialize_manual()
 
+        # Speichern-Option verwalten
         def handle_save_game(game):
             game.save_game()
             while True:
-                choice = input("Do you want to (q)uit or (c)ontinue playing? ").lower()
+                choice = input("Möchten Sie (q)uit beenden oder (c)ontinue weiterspielen? ").lower()
                 if choice == 'q':
-                    return False  # Exit game loop
+                    return False  # Spielschleife verlassen
                 elif choice == 'c':
-                    return True  # Continue game
-                print("Please enter 'q' to quit or 'c' to continue")
+                    return True  # Spiel fortsetzen
+                print("Bitte 'q' für Beenden oder 'c' für Fortsetzen eingeben.")
 
-        # Main game loop
+        # Hauptspielschleife
         while not game.is_solved():
             game.display_board()
-            
-            action = input("\nEnter number to move or 's' to save game: ")
-            
+
+            action = input("\nGeben Sie eine Zahl zum Verschieben oder 's' zum Speichern ein: ")
+
             if action.lower() == 's':
                 if not handle_save_game(game):
-                    break  # Exit to main menu
+                    break  # Zurück ins Hauptmenü
                 continue
-                
+
             try:
                 move = int(action)
                 if 1 <= move <= (game.board.size * game.board.size - 1):
                     if not game.make_move(move):
-                        print("Invalid move! Choose a number adjacent to the empty space.")
+                        print("Ungültiger Zug! Wählen Sie eine Zahl, die neben dem leeren Feld liegt.")
                 else:
-                    print(f"Please enter a number between 1 and {game.board.size * game.board.size - 1}.")
+                    print(f"Bitte eine Zahl zwischen 1 und {game.board.size * game.board.size - 1} eingeben.")
             except ValueError:
-                print("Please enter a valid number or 's' to save.")
+                print("Bitte eine gültige Zahl oder 's' eingeben.")
 
         game.display_board()
-        print(f"\nCongratulations! You solved the puzzle in {game.moves} moves!")
-        
-        if input("\nWould you like to play again? (y/n): ").lower() != 'y':
+        print(f"\nHerzlichen Glückwunsch! Sie haben das Puzzle in {game.moves} Zügen gelöst!")
+
+        if input("\nMöchten Sie erneut spielen? (y/n): ").lower() != 'y':
             break
 
-    print("Thanks for playing!")
+    print("Danke fürs Spielen!")
 
 if __name__ == "__main__":
     main()

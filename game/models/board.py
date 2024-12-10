@@ -1,37 +1,71 @@
 """
-    Represents a game board of a given size.
-    
-    The `Board` class manages the state of a game board, including the values of each cell and the position of the empty cell.
-    
-    Attributes:
-        size (int): The size of the game board (e.g. 3 for a 3x3 board).
-        board (list[list[int]]): The 2D list representing the values of each cell on the board.
-        empty_pos (tuple[int, int]): The row and column indices of the empty cell on the board.
-    
-    Methods:
-        get_value(row: int, col: int) -> int:
-            Returns the value of the cell at the given row and column.
-        set_value(row: int, col: int, value: int) -> None:
-            Sets the value of the cell at the given row and column.
-        is_valid_position(row: int, col: int) -> bool:
-            Checks if the given row and column indices are within the bounds of the board.
-        get_board_state() -> list[list[int]]:
-            Returns a copy of the current state of the board.
+Das Modul `board.py` definiert die Spielfeldlogik für das Sliding-Puzzle.
+
+Klasse:
+- Board: Repräsentiert das Spielfeld des Puzzles und verwaltet die Werte und Position des leeren Felds.
+
+Funktionen:
+- __init__(self, size): Initialisiert ein Spielfeld der angegebenen Größe.
+- get_value(self, row, col): Gibt den Wert eines bestimmten Feldes zurück.
+- set_value(self, row, col, value): Setzt den Wert eines bestimmten Feldes.
+- is_valid_position(self, row, col): Überprüft, ob eine Position innerhalb des Spielfelds liegt.
+- get_board_state(self): Gibt den aktuellen Zustand des Spielfelds als Kopie zurück.
 """
+
 class Board:
     def __init__(self, size):
+        """
+        Initialisiert ein Spielfeld mit gegebener Größe.
+
+        Argumente:
+        - size (int): Die Größe des Spielfelds (z. B. 3 für ein 3x3-Feld).
+        """
         self.size = size
         self.board = [[0] * size for _ in range(size)]
-        self.empty_pos = (size-1, size-1)
+        self.empty_pos = (size - 1, size - 1)  # Leeres Feld standardmäßig unten rechts
 
     def get_value(self, row, col):
+        """
+        Gibt den Wert an der angegebenen Position zurück.
+
+        Argumente:
+        - row (int): Die Zeile der Position.
+        - col (int): Die Spalte der Position.
+
+        Rückgabe:
+        - int: Der Wert an der angegebenen Position.
+        """
         return self.board[row][col]
 
     def set_value(self, row, col, value):
+        """
+        Setzt den Wert an der angegebenen Position.
+
+        Argumente:
+        - row (int): Die Zeile der Position.
+        - col (int): Die Spalte der Position.
+        - value (int): Der neue Wert für die Position.
+        """
         self.board[row][col] = value
 
     def is_valid_position(self, row, col):
+        """
+        Überprüft, ob die Position innerhalb des Spielfelds liegt.
+
+        Argumente:
+        - row (int): Die Zeile der Position.
+        - col (int): Die Spalte der Position.
+
+        Rückgabe:
+        - bool: True, wenn die Position gültig ist, sonst False.
+        """
         return 0 <= row < self.size and 0 <= col < self.size
 
     def get_board_state(self):
+        """
+        Gibt eine Kopie des aktuellen Spielfelds zurück.
+
+        Rückgabe:
+        - list[list[int]]: Der Zustand des Spielfelds.
+        """
         return [row[:] for row in self.board]
