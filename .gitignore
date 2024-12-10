@@ -1,2 +1,4 @@
 puzzle_save.json
 __pycache__/
+*.odt
+*.pptx
