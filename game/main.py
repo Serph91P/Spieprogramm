@@ -23,7 +23,7 @@ def main():
                 print("No saved game found!")
                 continue
         else:
-            # Existing new game code
+            # Get board size
             while True:
                 try:
                     size = int(input("Enter board size (minimum 2): "))
@@ -35,6 +35,7 @@ def main():
             
             game = SlidingPuzzle(size)
             
+            # Choose initialization method
             init_choice = input("Choose initialization method:\n1. Random\n2. Manual\nChoice: ")
             if init_choice == '1':
                 game.initialize_random()
@@ -79,5 +80,6 @@ def main():
             break
 
     print("Thanks for playing!")
+
 if __name__ == "__main__":
     main()
